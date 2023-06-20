@@ -58,8 +58,7 @@ def parseJson(j):
         return "No upcoming events"
 
 
-def getevents(artist):
-    id = artistId(artist)
+def getevents(id):
     time.sleep(2)
     js = getArtistConcerts(id)
     events = parseJson(js)

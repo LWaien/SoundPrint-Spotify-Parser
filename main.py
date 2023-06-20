@@ -2,21 +2,34 @@ import events
 import calculatedist as dist
 import progressbar as pb
 
+distanceThresh = 300 #anything over this distance (miles) will not be presented to the user
 
-artists = ["Drake","Lil Baby"]
+
 
 def getConcertList(artists):
+    artistlen = len(artists)+1
+    index = 1
+    allconcerts = []
     for artist in artists:
+        print(f"Getting events for artist {index} of {artistlen}...")
         event_list = events.getevents(artist)
-        length = len(event_list)
-        pb.printProgressBar(0, length, prefix = 'Progress:', suffix = 'Complete', length = 50)
-        #print(event_list)
         counter = 0 
         for event in event_list:
-            if event[0] and event[2] is not None:
-                event.append(dist.getDist(event[0],event[2]))
-            pb.printProgressBar(counter + 1, length, prefix = 'Progress:', suffix = 'Complete', length = 50)
+            if event[2] is not None:
+                distance = dist.getDist(event[2])
+                if distance <= distanceThresh:
+                    event.append(distance)
             counter += 1
-    #print(event_list)
+        index += 1
+        filteredList = filterList(event_list)
+        allconcerts.append(filteredList)
+    return allconcerts
 
-getConcertList(artists)
+
+def filterList(event_list):
+    newlist = []
+    for event in event_list:
+        if len(event) == 8:
+            newlist.append(event)
+    
+    return newlist

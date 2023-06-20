@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, request
 from flask import render_template
 from urllib.parse import urlencode
+import main
 import dataParser as dp
 import base64
 import requests
@@ -34,8 +35,11 @@ def formdisplay():
     
 
     #print(dp.getLibraryData(access_token))
-   
-    print(dp.getTopArtists(access_token))
+    #print(dp.getTopArtists(access_token))
+    topartists = [artist['artist_id'] for artist in dp.getTopArtists(access_token)]
+    lst = main.getConcertList(topartists)
+    for artist in lst:
+        print(artist)
     return "hello"
 
 
