@@ -1,0 +1,62 @@
+from flask import Flask, redirect, url_for, request
+from flask import render_template
+from urllib.parse import urlencode
+import base64
+import requests
+
+
+CLIENT_ID = "32f3ca3f815c4b7f91335ffeb5d90f7d"
+CLIENT_SECRET = "3f882c04f6824a68b45b251ff922488a"
+REDIRECT_URI = "http://127.0.0.1:5000/redirect"
+
+
+app = Flask(__name__)
+
+@app.route("/redirect")
+def formdisplay():
+    auth_code = request.args.get('code')
+
+    # Exchange the authorization code for an access token
+    headers = {
+        'Authorization': 'Basic ' + base64.b64encode(f'{CLIENT_ID}:{CLIENT_SECRET}'.encode()).decode(),
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    data = {
+        'grant_type': 'authorization_code',
+        'code': auth_code,
+        'redirect_uri': REDIRECT_URI
+    }
+    response = requests.post('https://accounts.spotify.com/api/token', headers=headers, data=urlencode(data))
+    token_data = response.json()
+
+    # Use the access token to make API requests on behalf of the user
+    access_token = token_data.get('access_token')
+
+    # Example API request - fetch user profile
+    profile_response = requests.get('https://api.spotify.com/v1/me', headers={'Authorization': 'Bearer ' + access_token})
+    profile_data = profile_response.json()
+
+    # Example API request - fetch user playlists
+    playlists_response = requests.get('https://api.spotify.com/v1/me/top/artists', headers={'Authorization': 'Bearer ' + access_token})
+    playlists_data = playlists_response.json()
+    #print(playlists_data['items'])
+    topartists = []
+    for i in playlists_data['items']:
+        ####Create dictionaries and append them to list. You can then sort them using the sorted() function built into python by popularity or 
+        ###whatever
+        topartists.append([i['name'],i['popularity'],i['id']])
+        print(i['name']," - ",i['popularity']," - ",i['id'])
+    #print(playlists_response)
+    return playlists_data
+
+
+@app.route("/")
+def login():
+    params = {
+        'response_type': 'code',
+        'client_id': CLIENT_ID,
+        'scope': 'user-top-read user-library-read',  # Add required scopes
+        'redirect_uri': REDIRECT_URI
+    }
+    auth_url = 'https://accounts.spotify.com/authorize?' + urlencode(params)
+    return redirect(auth_url)
