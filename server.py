@@ -42,8 +42,10 @@ def formdisplay():
     #print(playlists_data['items'])
     topartists = []
     for i in playlists_data['items']:
+        ### use a shorter time frame for top artists to get things the user might be more into lately and hasnt seen yet
         ####Create dictionaries and append them to list. You can then sort them using the sorted() function built into python by popularity or 
-        ###whatever
+        ###whatever. ALSO add parameters for length of top artists (time back) and do data scraping basing on all library songs etc. You should also do 
+        ### something with the recommendation section of the api. Top songs could also be a good indicator for concert
         topartists.append([i['name'],i['popularity'],i['id']])
         print(i['name']," - ",i['popularity']," - ",i['id'])
     #print(playlists_response)
