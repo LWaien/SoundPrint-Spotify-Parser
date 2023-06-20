@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, request
 from flask import render_template
 from urllib.parse import urlencode
+import dataParser as dp
 import base64
 import requests
 
@@ -30,57 +31,12 @@ def formdisplay():
     token_data = response.json()
     # Use the access token to make API requests on behalf of the user
     access_token = token_data.get('access_token')
-    # Example API request - fetch user profile
-    profile_response = requests.get('https://api.spotify.com/v1/me', headers={'Authorization': 'Bearer ' + access_token})
-    profile_data = profile_response.json()
+    
 
-
-    # Example API request - fetch user playlists
-    playlists_response = requests.get('https://api.spotify.com/v1/me/top/artists', headers={'Authorization': 'Bearer ' + access_token})
-    playlists_data = playlists_response.json()
-    #print(playlists_data['items'])
-
-
-    limit = 50
-    offset = 0
-
-    while True:
-        # Send a GET request to the endpoint with the limit and offset
-        params = {
-            'market':'US',
-            'limit': limit,
-            'offset': offset
-        }
-        response = requests.get('https://api.spotify.com/v1/me/tracks', headers={'Authorization': 'Bearer ' + access_token}, params=params)
-        data = response.json()
-
-        # Iterate over each track and display the track name and artists
-        for item in data['items']:
-            track = item['track']
-            track_name = track['name']
-            artists = [artist['name'] for artist in track['artists']]
-
-            print(f"Track: {track_name}")
-            print(f"Artists: {artists}")
-            print()
-
-        # Increment the offset by the limit to get the next page
-        offset += limit
-
-        # If there are no more items, exit the loop
-        if len(data['items']) < limit:
-            break
-
-    topartists = []
-    for i in playlists_data['items']:
-        ### use a shorter time frame for top artists to get things the user might be more into lately and hasnt seen yet
-        ####Create dictionaries and append them to list. You can then sort them using the sorted() function built into python by popularity or 
-        ###whatever. ALSO add parameters for length of top artists (time back) and do data scraping basing on all library songs etc. You should also do 
-        ### something with the recommendation section of the api. Top songs could also be a good indicator for concert
-        topartists.append([i['name'],i['popularity'],i['id']])
-        #print(i['name']," - ",i['popularity']," - ",i['id'])
-    #print(playlists_response)
-    return playlists_data
+    #print(dp.getLibraryData(access_token))
+   
+    print(dp.getTopArtists(access_token))
+    return "hello"
 
 
 @app.route("/")
