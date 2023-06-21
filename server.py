@@ -35,16 +35,20 @@ def formdisplay():
     
 
     #print(dp.getLibraryData(access_token))
-    #print(dp.getTopArtists(access_token))
     topartists = [artist['artist_id'] for artist in dp.getTopArtists(access_token)]
     lst = main.getConcertList(topartists)
+    #remove blank entries and then split by within a month of now and try to pick 5-10 of those first. Save anything father out for next month
+    final_top_artists = []
     for artist in lst:
-        print(artist)
+        if artist:
+            final_top_artists.append(artist)
+    print(final_top_artists)
     return "hello"
 
 
 @app.route("/")
 def login():
+    print('running')
     params = {
         'response_type': 'code',
         'client_id': CLIENT_ID,

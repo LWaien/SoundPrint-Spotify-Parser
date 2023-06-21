@@ -3,19 +3,8 @@ import time
 import re
 
 
-def artistId(artistname):
-    url = "https://spotify-scraper.p.rapidapi.com/v1/artist/search"
-    querystring = {"name": artistname}
-    headers = {"X-RapidAPI-Key": "4cb897967cmshd1ea0ddcb68d80cp175d35jsn3fc529a8f8c2",
-               "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"}
-
-    response = requests.request(
-        "GET", url, headers=headers, params=querystring)
-
-    return response.json().get('id')
-
-
 def getArtistConcerts(artistId):
+    print("Requesting concerts")
     url = "https://spotify-scraper.p.rapidapi.com/v1/artist/concerts"
     parameters = {"artistId": artistId}
     headers = {"X-RapidAPI-Key": "4cb897967cmshd1ea0ddcb68d80cp175d35jsn3fc529a8f8c2",
@@ -27,6 +16,7 @@ def getArtistConcerts(artistId):
 
 
 def parseJson(j):
+    print("Parsing json")
     allevents = []
     if j != None:
         for event in j:
@@ -36,12 +26,16 @@ def parseJson(j):
             location = event['location']
             date = event['date']
             url = event['ticketers'][0]['url']
-            if event['ticketing']:
+
+            '''if event['ticketing']:
                 minPrice = processPrice(event['ticketing'][0]['minPrice'])
                 maxPrice = processPrice(event['ticketing'][0]['maxPrice'])
             else:
                 minPrice = None
-                maxPrice = None
+                maxPrice = None'''
+
+            minPrice = None
+            maxPrice = None
             
 
             data.append(venue)
@@ -59,15 +53,19 @@ def parseJson(j):
 
 
 def getevents(id):
-    time.sleep(2)
-    js = getArtistConcerts(id)
-    events = parseJson(js)
+    print("Getting events")
+    #time.sleep(2)
+    json = getArtistConcerts(id)
+    events = parseJson(json)
 
     return events
 
 def processPrice(price):
+    print("Processing prices")
     #returns None for any non-US currency since conversions are not supported for this platform yet. 
     if len(price)>0 and price[0] == "$":
-        return re.sub("[^0-9,.]", "", str(price))
+        #return re.sub("[^0-9,.]", "", str(price))
+        return str(price[1:])
+
     else:
         return None

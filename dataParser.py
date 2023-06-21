@@ -1,6 +1,7 @@
 import requests
 
 def getLibraryData(access_token):
+    print("Retrieving user's library... ")
     limit = 50
     offset = 0
 
@@ -39,6 +40,7 @@ def getLibraryData(access_token):
     return libdata
 
 def getTopArtists(access_token):
+    print("Retrieving user's top artists...")
     topartists_response = requests.get('https://api.spotify.com/v1/me/top/artists', headers={'Authorization': 'Bearer ' + access_token})
     topartists_data = topartists_response.json()
 
