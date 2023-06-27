@@ -27,16 +27,13 @@ def parseJson(j):
             date = event['date']
             url = event['ticketers'][0]['url']
 
-            '''if event['ticketing']:
-                minPrice = processPrice(event['ticketing'][0]['minPrice'])
-                maxPrice = processPrice(event['ticketing'][0]['maxPrice'])
+            if event['ticketing']:
+                if event['ticketing'][0]['minPrice'] and event['ticketing'][0]['maxPrice']:
+                    minPrice = processPrice(event['ticketing'][0]['minPrice'])
+                    maxPrice = processPrice(event['ticketing'][0]['maxPrice'])
             else:
                 minPrice = None
-                maxPrice = None'''
-
-            minPrice = None
-            maxPrice = None
-            
+                maxPrice = None
 
             data.append(venue)
             data.append(title)
@@ -45,7 +42,6 @@ def parseJson(j):
             data.append(url)
             data.append(minPrice)
             data.append(maxPrice)
-            #print(data)
             allevents.append(data)
         return allevents
     else:
@@ -54,14 +50,13 @@ def parseJson(j):
 
 def getevents(id):
     print("Getting events")
-    #time.sleep(2)
     json = getArtistConcerts(id)
     events = parseJson(json)
 
     return events
 
 def processPrice(price):
-    print("Processing prices")
+    #print("Processing prices")
     #returns None for any non-US currency since conversions are not supported for this platform yet. 
     if len(price)>0 and price[0] == "$":
         #return re.sub("[^0-9,.]", "", str(price))
