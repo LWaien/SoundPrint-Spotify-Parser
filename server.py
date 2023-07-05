@@ -1,12 +1,11 @@
-from flask import Flask, redirect, url_for, request
+from flask import Flask, redirect, url_for, request,jsonify, make_response
 from flask import render_template
 from urllib.parse import urlencode
 import main
-import dataParser as dp
 import base64
 import requests
-import algorithm as a
 
+import json
 
 CLIENT_ID = "32f3ca3f815c4b7f91335ffeb5d90f7d"
 CLIENT_SECRET = "3f882c04f6824a68b45b251ff922488a"
@@ -34,20 +33,10 @@ def formdisplay():
     # Use the access token to make API requests on behalf of the user
     access_token = token_data.get('access_token')
     
-
-    ###Actual data parsing begins here
-
     #print(dp.getLibraryData(access_token))
-    topartists = [artist['artist_id'] for artist in dp.getTopArtists(access_token)]
-    lst = main.getConcertList(topartists)
-    #remove blank entries and then split by within a month of now and try to pick 5-10 of those first. Save anything father out for next month
-    final_top_artists = []
-    for artist in lst:
-        if artist:
-            final_top_artists.append(artist)
-    #print(final_top_artists)
-    a.returnTop(final_top_artists)
-    return "response given"
+    lst = main.getConcertList(access_token)
+    response = make_response(jsonify(lst),201)
+    return response
 
 
 @app.route("/")
