@@ -33,7 +33,10 @@ def scoreDates(concerts):
     concertsScoredDate = []
     for concert in concertsWithUntil:
         daysuntil = concert['days_until']
-        concert['daysuntil_score'] = daysuntil / maxTimeUntil
+        if maxTimeUntil == 0:
+            concert['daysuntil_score'] = 0
+        else:
+            concert['daysuntil_score'] = daysuntil / maxTimeUntil
         concertsScoredDate.append(concert)
     return concertsScoredDate
 
