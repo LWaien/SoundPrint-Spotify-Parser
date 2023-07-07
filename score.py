@@ -33,6 +33,7 @@ def scoreDates(concerts):
     concertsScoredDate = []
     for concert in concertsWithUntil:
         daysuntil = concert['days_until']
+        #Handling a case where max days until = 0. This would care an error due to division by 0 so we set equal 0
         if maxTimeUntil == 0:
             concert['daysuntil_score'] = 0
         else:
@@ -41,6 +42,7 @@ def scoreDates(concerts):
     return concertsScoredDate
 
 def getMaxUntil(concerts):
+    #finding maximum number of days until concert in an artist's list of concerts
     maxuntil = 0
     for concert in concerts:
         daysUntil = concert['days_until']
