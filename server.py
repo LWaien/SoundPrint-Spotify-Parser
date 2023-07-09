@@ -53,8 +53,9 @@ def login():
     return redirect(auth_url)
 
 
-app.route("/newUser",methods=['GET'])
+@app.route("/newUser",methods=['GET'])
 def newUser():
+    print('working')
     #collect data from request
     email = request.args.get('email')
     first_name = request.args.get('fname')
@@ -62,9 +63,11 @@ def newUser():
     max_distance = request.args.get('max_distance')
     location = [request.args.get('location')]
     #push that data into the database using firebase.insertUser()
+    print(email,first_name)
+    
     try:
         firebase.insertUser(email,first_name,last_name,max_distance,location)
-        return make_response(201)
+        return make_response({'msg':"Working"},201)
     except:
         #return 404 if db system fails
-        return make_response(404)
+        return make_response({'msg':"Working"},404)
