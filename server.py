@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 import main
 import base64
 import requests
+import firebase
 
 import json
 
@@ -50,3 +51,20 @@ def login():
     }
     auth_url = 'https://accounts.spotify.com/authorize?' + urlencode(params)
     return redirect(auth_url)
+
+
+app.route("/newUser",methods=['GET'])
+def newUser():
+    #collect data from request
+    email = request.args.get('email')
+    first_name = request.args.get('fname')
+    last_name = request.args.get('lname')
+    max_distance = request.args.get('max_distance')
+    location = [request.args.get('location')]
+    #push that data into the database using firebase.insertUser()
+    try:
+        firebase.insertUser(email,first_name,last_name,max_distance,location)
+        return make_response(201)
+    except:
+        #return 404 if db system fails
+        return make_response(404)
