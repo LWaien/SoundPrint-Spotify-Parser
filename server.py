@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 import main
 import base64
 import requests
-import firebase
+import fb
 
 import json
 
@@ -66,8 +66,8 @@ def newUser():
     print(email,first_name)
     
     try:
-        firebase.insertUser(email,first_name,last_name,max_distance,location)
+        fb.insertUser(email,first_name,last_name,max_distance,location)
         return make_response({'msg':"Working"},201)
     except:
         #return 404 if db system fails
-        return make_response({'msg':"Working"},404)
+        return make_response({'msg':"Not working"},404)
