@@ -7,9 +7,9 @@ import fb
 cred = credentials.Certificate("credentials.json")
 firebase_admin.initialize_app(cred, {'databaseURL':'https://concertrec-da7fc-default-rtdb.firebaseio.com/'})
 ref = db.reference('/py')
+users = ref.child('users')
 
 def insertUser(email,fname,lname,maxdist,location):
-    users = ref.child('users')
     users.push({
         'email': email,
         'spotify_user': None,
@@ -22,8 +22,13 @@ def insertUser(email,fname,lname,maxdist,location):
         'lib_artists': None
     })
 
-    search_key = 'email'
-    search_value = email
+    result = searchDb('email',email)
+
+    for key in result:
+        print(result[key])
+
+
+def searchDb(search_key,search_value):
 
     # Retrieve the entire dataset
     all_users = users.get()
@@ -35,7 +40,4 @@ def insertUser(email,fname,lname,maxdist,location):
         if value.get(search_key) == search_value
     }
 
-    #print(result)
-
-    for key in result:
-        print(result[key])
+    return result
