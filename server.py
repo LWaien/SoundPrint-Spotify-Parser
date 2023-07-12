@@ -1,12 +1,12 @@
 from flask import Flask, redirect, url_for, request,jsonify, make_response
 from flask import render_template
 from urllib.parse import urlencode
+import collectdata
 import main
 import base64
 import requests
 import fb
 
-import json
 
 CLIENT_ID = "32f3ca3f815c4b7f91335ffeb5d90f7d"
 CLIENT_SECRET = "3f882c04f6824a68b45b251ff922488a"
@@ -34,10 +34,26 @@ def formdisplay():
     # Use the access token to make API requests on behalf of the user
     access_token = token_data.get('access_token')
     
+
+    #Using this to test what will go into /generateData
+    topartists = collectdata.gatherTopArtists(access_token)
+    libdata = collectdata.gatherLibData(access_token)
+    
+    #test variable. This should be passed in
+    email = 'lawaien14@gmail.com'
+
+
+    fb.insertUser(email,None,None,350,None)
+    #add spotify username to this function
+    fb.addSpotifyData(email,topartists,libdata)
+
+    return "test worked"
+
+    '''
     #print(dp.getLibraryData(access_token))
     lst = main.getConcertList(access_token)
     response = make_response(jsonify(lst),201)
-    return response
+    return response '''
 
 
 @app.route("/")
@@ -62,12 +78,23 @@ def newUser():
     last_name = request.args.get('lname')
     max_distance = request.args.get('max_distance')
     location = [request.args.get('location')]
-    #push that data into the database using firebase.insertUser()
     print(email,first_name)
     
+    #attempt to push to db
     try:
-        fb.insertUser(email,first_name,last_name,max_distance,location)
-        return make_response({'msg':"Working"},201)
+        response_msg,response_code = fb.insertUser(email,first_name,last_name,max_distance,location)
+        #if response code is 409 (user exists), front end should redirect to login
+        return make_response(response_msg,response_code)
     except:
         #return 404 if db system fails
-        return make_response({'msg':"Not working"},404)
+        return make_response({'msg':"Unable to connect to the database"},404)
+    
+
+@app.route("/generateData/<access_token>",methods=['GET'])
+def generateData(access_token):
+    #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
+    libdata = collectdata.gatherLibData(access_token)
+    topartists = collectdata.gatherTopArtists(access_token)
+    #fb add data to db
+
+    return make_response({'msg':"Spotify data added to user profile"},201)

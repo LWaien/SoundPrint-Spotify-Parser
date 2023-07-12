@@ -6,7 +6,8 @@ def getConcertList(access_token):
 
     #declare concert_data which will store top artist concerts and then library-based concerts 
     concert_data = calldata.getTopArtists(access_token)
-    libdata = calldata.getLibraryData(access_token,concert_data)
+    #libdata = getLibdataFromDB(email)
+    libdata = calldata.processLibraryData(libdata,concert_data)
     for concert in libdata:
         concert_data.append(concert)
     return concert_data

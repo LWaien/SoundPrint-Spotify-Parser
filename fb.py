@@ -10,34 +10,45 @@ ref = db.reference('/py')
 users = ref.child('users')
 
 def insertUser(email,fname,lname,maxdist,location):
-    users.push({
-        'email': email,
-        'spotify_user': None,
-        'fname': fname,
-        'lname': lname,
-        'maxdist': maxdist,
-        'location': location,
-        'last_email': None,
-        'top_artists': None,
-        'lib_artists': None
-    })
+    exists = searchDb('email',email)
 
-    result = searchDb('email',email)
+    if exists:
+        return {'msg':'user already exists'},409
+    else:
+        users.push({
+            'email': email,
+            'spotify_user': '',
+            'fname': fname,
+            'lname': lname,
+            'maxdist': maxdist,
+            'location': location,
+            'last_email': '',
+            'top_artists': '',
+            'libdata': ''
+        })
 
-    for key in result:
-        print(result[key])
-
+        return {'msg':'user was successfully added to the the database'},201
 
 def searchDb(search_key,search_value):
 
     # Retrieve the entire dataset
-    all_users = users.get()
+    user = users.get()
 
     # Filter the data locally based on the key-value pair
-    result = {
-        key: value
-        for key, value in all_users.items()
-        if value.get(search_key) == search_value
-    }
+    if user:
+        result = {
+            key: value
+            for key, value in user.items()
+            if value.get(search_key) == search_value
+        }
+        key_ids = list(result.keys())
+        return key_ids
+    else:
+        return None
 
-    return result
+def addSpotifyData(email,topartists,libdata):
+    keys = searchDb('email',email)
+    user_key = keys[0]
+    user = users.child(user_key)
+    user.update({'libdata':libdata,'top_artists':topartists})
+    print(user.get())
