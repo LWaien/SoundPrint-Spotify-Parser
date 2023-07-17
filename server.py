@@ -65,7 +65,6 @@ def login():
 
 @app.route("/newUser",methods=['GET'])
 def newUser():
-    print('working')
     #collect data from request
     email = request.args.get('email')
     first_name = request.args.get('fname')
@@ -73,7 +72,6 @@ def newUser():
     max_distance = request.args.get('max_distance')
     location = [request.args.get('location')]
 
-    
     #attempt to push to db
     try:
         response_msg,response_code = fb.insertUser(email,first_name,last_name,max_distance,location)
@@ -84,17 +82,25 @@ def newUser():
         return make_response({'msg':"Unable to connect to the database"},404)
     
 
-@app.route("/generateData/<email>/<access_token>",methods=['GET'])
-def generateData(email, access_token):
+@app.route("/generateData/<email>/<spotify_user>/<access_token>",methods=['GET'])
+def generateData(email,spotify_user, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
-    #used for new accounts. Make a variation for when account want to refresh data
-
-    print(email)
+    
+    
     libdata = collectdata.gatherLibData(access_token)
     topartists = collectdata.gatherTopArtists(access_token)
 
-    #add spotify username to this function
-    msg,code = fb.addSpotifyData(email,topartists,libdata)
+        #add spotify username to this function
+    msg,code = fb.addSpotifyData(email,spotify_user,topartists,libdata)
 
     return make_response(msg,code)
    
+@app.route("/checkUser/<spotify_user>",methods=['GET'])
+def checkUser(spotify_user):
+    keys = fb.searchDb('spotify_user',spotify_user)
+    if keys:
+        print('user exists')
+        return make_response({'msg':'User exists'},200)
+    else:
+        print('user does not exists')
+        return make_response({'msg':'User does not have an account'},404)
