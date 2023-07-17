@@ -46,7 +46,7 @@ def searchDb(search_key,search_value):
     else:
         return None
 
-def addSpotifyData(email,topartists,libdata):
+def addSpotifyData(email,spotify_user,topartists,libdata):
     #search for user in db
     keys = searchDb('email',email)
 
@@ -57,7 +57,7 @@ def addSpotifyData(email,topartists,libdata):
     user_key = keys[0]
     #referencing the user we want to add data for
     user = users.child(user_key)
-    user.update({'libdata':libdata,'top_artists':topartists})
+    user.update({'spotify_user':spotify_user,'libdata':libdata,'top_artists':topartists})
     #print(user.get())
     return {'msg':'Library Data Added!'},201
 
