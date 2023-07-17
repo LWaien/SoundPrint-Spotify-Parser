@@ -39,13 +39,7 @@ def formdisplay():
     topartists = collectdata.gatherTopArtists(access_token)
     libdata = collectdata.gatherLibData(access_token)
     
-    #test variable. This should be passed in
-    email = 'lawaien14@gmail.com'
-
-
-    fb.insertUser(email,None,None,350,None)
-    #add spotify username to this function
-    fb.addSpotifyData(email,topartists,libdata)
+    
 
     return "test worked"
 
@@ -78,7 +72,7 @@ def newUser():
     last_name = request.args.get('lname')
     max_distance = request.args.get('max_distance')
     location = [request.args.get('location')]
-    print(email,first_name)
+
     
     #attempt to push to db
     try:
@@ -90,11 +84,17 @@ def newUser():
         return make_response({'msg':"Unable to connect to the database"},404)
     
 
-@app.route("/generateData/<access_token>",methods=['GET'])
-def generateData(access_token):
+@app.route("/generateData/<email>/<access_token>",methods=['GET'])
+def generateData(email, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
+    #used for new accounts. Make a variation for when account want to refresh data
+
+    print(email)
     libdata = collectdata.gatherLibData(access_token)
     topartists = collectdata.gatherTopArtists(access_token)
-    #fb add data to db
 
-    return make_response({'msg':"Spotify data added to user profile"},201)
+    #add spotify username to this function
+    msg,code = fb.addSpotifyData(email,topartists,libdata)
+
+    return make_response(msg,code)
+   

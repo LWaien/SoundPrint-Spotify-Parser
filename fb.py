@@ -47,8 +47,27 @@ def searchDb(search_key,search_value):
         return None
 
 def addSpotifyData(email,topartists,libdata):
+    #search for user in db
     keys = searchDb('email',email)
+
+    if keys is None:
+        return {'msg':'Could Not Find User'},404
+    
+    #returns list of ids for applicable entries
     user_key = keys[0]
+    #referencing the user we want to add data for
     user = users.child(user_key)
     user.update({'libdata':libdata,'top_artists':topartists})
-    print(user.get())
+    #print(user.get())
+    return {'msg':'Library Data Added!'},201
+
+def checkData(email):
+    keys = searchDb('email',email)
+    user = users.child(keys[0])
+    print(email)
+
+    if user.get('libdata') is None and user.get('top_artists') is None:
+        #return false as in user data does not exist and need to collect again
+        return False
+    else:
+        return True
