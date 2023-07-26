@@ -6,7 +6,7 @@ import fb
 
 cred = credentials.Certificate("credentials.json")
 firebase_admin.initialize_app(cred, {'databaseURL':'https://concertrec-da7fc-default-rtdb.firebaseio.com/'})
-ref = db.reference('/py')
+ref = db.reference()
 users = ref.child('users')
 
 def insertUser(email,fname,lname,maxdist,location):
@@ -59,7 +59,7 @@ def addSpotifyData(email,spotify_user,topartists,libdata):
     user = users.child(user_key)
     user.update({'spotify_user':spotify_user,'libdata':libdata,'top_artists':topartists})
     #print(user.get())
-    return {'msg':'Library Data Added!'},201
+    return 'Library Data Added!',201
 
 def checkData(email):
     keys = searchDb('email',email)
