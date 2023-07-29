@@ -44,12 +44,23 @@ def generateData(email,spotify_user, access_token):
 
     return make_response({'msg':msg,'status':code})
    
-@app.route("/checkUser/<spotify_user>",methods=['GET'])
-def checkUser(spotify_user):
+@app.route("/checkUser/<spotify_user>/<email>",methods=['GET'])
+def checkUser(spotify_user,email):
     keys = fb.searchDb('spotify_user',spotify_user)
     if keys:
-        print('user exists')
         return make_response({'msg':'User exists'},200)
+    
+    #print(email)
+    #first check if user exists
+    user_keys = fb.searchDb('email',email)
+    if user_keys:
+        #second, check if spotify data loaded. Give according resp so 
+        #front end can display
+        spotify_keys = fb.searchDb('spotify_user',spotify_user)
+        if spotify_keys:
+            return make_response({'msg':'User exists'},200)
+        else:
+            return make_response({'msg':'data still loading'},201)
     else:
         print('user does not exist')
         return make_response({'msg':'User does not have an account'},404)

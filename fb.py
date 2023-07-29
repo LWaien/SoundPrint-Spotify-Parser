@@ -61,13 +61,19 @@ def addSpotifyData(email,spotify_user,topartists,libdata):
     #print(user.get())
     return 'Library Data Added!',201
 
-def checkData(email):
-    keys = searchDb('email',email)
+def checkData(spotify_user):
+    keys = searchDb('spotify_user',spotify_user)
     user = users.child(keys[0])
-    print(email)
 
     if user.get('libdata') is None and user.get('top_artists') is None:
-        #return false as in user data does not exist and need to collect again
+        #return false as in user data does not exist
         return False
     else:
         return True
+
+def getEmail(spotify_user):
+    keys = searchDb('spotify_user',spotify_user)
+    print(keys[0])
+    user = users.child(keys[0])
+
+    return user.get('email')
