@@ -29,7 +29,18 @@ def newUser():
     except:
         #return 404 if db system fails
         return make_response({'msg':"Unable to connect to the database"},404)
-    
+
+
+@app.route("/createNewUser",methods=['GET'])
+def createNewUser():
+    spotify_user = request.args.get('spotify_user')
+    try:
+        response_msg,response_code = fb.createNewUser(spotify_user)
+        #if response code is 409 (user exists), front end should redirect to login
+        return make_response(response_msg,response_code)
+    except:
+        #return 404 if db system fails
+        return make_response({'msg':"Unable to connect to the database"},404)
 
 @app.route("/generateData/<email>/<spotify_user>/<access_token>",methods=['GET'])
 def generateData(email,spotify_user, access_token):
@@ -43,6 +54,15 @@ def generateData(email,spotify_user, access_token):
     msg,code = fb.addSpotifyData(email,spotify_user,topartists,libdata)
 
     return make_response({'msg':msg,'status':code})
+
+@app.route("/checkUser/<spotify_user>/",methods=['GET'])
+def checkUser2(spotify_user):
+    keys = fb.searchDb('spotify_user',spotify_user)
+    if keys:
+        return make_response({'msg':'User exists'},200)
+    else:
+        return make_response({'msg':'User not found'},404)
+
    
 @app.route("/checkUser/<spotify_user>/<email>",methods=['GET'])
 def checkUser(spotify_user,email):

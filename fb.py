@@ -29,6 +29,27 @@ def insertUser(email,fname,lname,maxdist,location):
 
         return {'msg':'user was successfully added to the the database'},201
 
+def createNewUser(spotify_user):
+    exists = searchDb('spotify_user',spotify_user)
+
+    if exists:
+        return {'msg':'user already exists'},409
+    else:
+        users.push({
+            'email': '',
+            'spotify_user': spotify_user,
+            'fname': '',
+            'lname': '',
+            'maxdist': '',
+            'location': '',
+            'last_email': '',
+            'top_artists': '',
+            'libdata': ''
+        })
+
+        return {'msg':'user was successfully added to the the database'},201
+
+
 def searchDb(search_key,search_value):
 
     # Retrieve the entire dataset
@@ -70,10 +91,3 @@ def checkData(spotify_user):
         return False
     else:
         return True
-
-def getEmail(spotify_user):
-    keys = searchDb('spotify_user',spotify_user)
-    print(keys[0])
-    user = users.child(keys[0])
-
-    return user.get('email')
