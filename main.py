@@ -35,15 +35,15 @@ def newUser():
 def createNewUser():
     spotify_user = request.args.get('spotify_user')
     try:
-        response_msg,response_code = fb.createNewUser(spotify_user)
+        fb.createNewUser(spotify_user)
         #if response code is 409 (user exists), front end should redirect to login
-        return make_response(response_msg,response_code)
+        return make_response({'msg':'user was successfully added to the the database'},201)
     except:
         #return 404 if db system fails
         return make_response({'msg':"Unable to connect to the database"},404)
 
-@app.route("/generateData/<email>/<spotify_user>/<access_token>",methods=['GET'])
-def generateData(email,spotify_user, access_token):
+@app.route("/generateData/<spotify_user>/<access_token>",methods=['GET'])
+def generateData(spotify_user, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
 
 
@@ -51,7 +51,7 @@ def generateData(email,spotify_user, access_token):
     topartists = collectdata.gatherTopArtists(access_token)
 
         #add spotify username to this function
-    msg,code = fb.addSpotifyData(email,spotify_user,topartists,libdata)
+    msg,code = fb.addSpotifyData(spotify_user,topartists,libdata)
 
     return make_response({'msg':msg,'status':code})
 

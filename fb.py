@@ -30,24 +30,17 @@ def insertUser(email,fname,lname,maxdist,location):
         return {'msg':'user was successfully added to the the database'},201
 
 def createNewUser(spotify_user):
-    exists = searchDb('spotify_user',spotify_user)
-
-    if exists:
-        return {'msg':'user already exists'},409
-    else:
-        users.push({
-            'email': '',
-            'spotify_user': spotify_user,
-            'fname': '',
-            'lname': '',
-            'maxdist': '',
-            'location': '',
-            'last_email': '',
-            'top_artists': '',
-            'libdata': ''
+    users.push({
+        'email': '',
+        'spotify_user': spotify_user,
+        'fname': '',
+        'lname': '',
+        'maxdist': '',
+        'location': '',
+        'last_email': '',
+        'top_artists': '',
+        'libdata': ''
         })
-
-        return {'msg':'user was successfully added to the the database'},201
 
 
 def searchDb(search_key,search_value):
@@ -67,9 +60,10 @@ def searchDb(search_key,search_value):
     else:
         return None
 
-def addSpotifyData(email,spotify_user,topartists,libdata):
+def addSpotifyData(spotify_user,topartists,libdata):
     #search for user in db
-    keys = searchDb('email',email)
+    print(f"Adding user data for {spotify_user}")
+    keys = searchDb('spotify_user',spotify_user)
 
     if keys is None:
         return {'msg':'Could Not Find User'},404
@@ -78,9 +72,9 @@ def addSpotifyData(email,spotify_user,topartists,libdata):
     user_key = keys[0]
     #referencing the user we want to add data for
     user = users.child(user_key)
-    user.update({'spotify_user':spotify_user,'libdata':libdata,'top_artists':topartists})
+    user.update({'libdata':libdata,'top_artists':topartists})
     #print(user.get())
-    return 'Library Data Added!',201
+    return 'Library data added',201
 
 def checkData(spotify_user):
     keys = searchDb('spotify_user',spotify_user)
