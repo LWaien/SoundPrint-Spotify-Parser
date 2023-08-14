@@ -15,7 +15,7 @@ def insertEmailInfo(spotify_user, email,fname,lname,maxdist,location):
     #referencing the user we want to add data for
     user = users.child(user_key)
     
-    user.push({
+    user.update({
         'email': email,
         'fname': fname,
         'lname': lname,
