@@ -12,9 +12,10 @@ CLIENT_SECRET = "3f882c04f6824a68b45b251ff922488a"
 app = Flask(__name__)
 
 
-@app.route("/newUser",methods=['GET'])
-def newUser():
+@app.route("/addEmailInfo",methods=['GET'])
+def addEmailInfo():
     #collect data from request
+    spotify_user = request.args.get('spotify_user')
     email = request.args.get('email')
     first_name = request.args.get('fname')
     last_name = request.args.get('lname')
@@ -23,7 +24,7 @@ def newUser():
 
     #attempt to push to db
     try:
-        response_msg,response_code = fb.insertUser(email,first_name,last_name,max_distance,location)
+        response_msg,response_code = fb.insertEmailInfo(spotify_user, email,first_name,last_name,max_distance,location)
         #if response code is 409 (user exists), front end should redirect to login
         return make_response(response_msg,response_code)
     except:
@@ -45,7 +46,7 @@ def createNewUser():
 @app.route("/generateData/<spotify_user>/<access_token>",methods=['GET'])
 def generateData(spotify_user, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
-
+    print("genData")
 
     libdata = collectdata.gatherLibData(access_token)
     topartists = collectdata.gatherTopArtists(access_token)

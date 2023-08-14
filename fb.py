@@ -9,25 +9,22 @@ firebase_admin.initialize_app(cred, {'databaseURL':'https://concertrec-da7fc-def
 ref = db.reference()
 users = ref.child('users')
 
-def insertUser(email,fname,lname,maxdist,location):
-    exists = searchDb('email',email)
-
-    if exists:
-        return {'msg':'user already exists'},409
-    else:
-        users.push({
-            'email': email,
-            'spotify_user': '',
-            'fname': fname,
-            'lname': lname,
-            'maxdist': maxdist,
-            'location': location,
-            'last_email': '',
-            'top_artists': '',
-            'libdata': ''
+def insertEmailInfo(spotify_user, email,fname,lname,maxdist,location):
+    keys = searchDb('spotify_user',spotify_user)
+    user_key = keys[0]
+    #referencing the user we want to add data for
+    user = users.child(user_key)
+    
+    user.push({
+        'email': email,
+        'fname': fname,
+        'lname': lname,
+        'maxdist': maxdist,
+        'location': location,
+        
         })
 
-        return {'msg':'user was successfully added to the the database'},201
+    return {'msg':'email info successfully added to the the database'},201
 
 def createNewUser(spotify_user):
     users.push({
