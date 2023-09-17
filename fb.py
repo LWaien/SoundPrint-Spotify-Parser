@@ -73,30 +73,3 @@ def addSpotifyData(spotify_user,topartists,libdata,topsongs):
     #print(user.get())
     return 'Library data added',201
 
-def checkData(spotify_user):
-    keys = searchDb('spotify_user',spotify_user)
-    user = users.child(keys[0])
-
-    if user.get('libdata') is None and user.get('top_artists') is None:
-        #return false as in user data does not exist
-        return False
-    else:
-        return True
-
-def get_topartists(keys):
-    user_key = keys[0]
-    user = users.child(user_key)    
-    artist_data = user.get('email')
-    #artist data is first returned as a tuple so we're just going to reference it with index 0 and then reference 'top_artists' from the dictionary within it
-    artist_data = artist_data[0]['top_artists']['items']
-    return artist_data
-
-def getpreviousEmail(keys):
-    user_key = keys[0]
-    user = users.child(user_key)
-    try:
-        prev_email = user.get('previous_list')
-        prev_email = prev_email[0]['previous_list']
-        return prev_email
-    except:
-        return None
