@@ -23,3 +23,6 @@ def generateData(spotify_user, access_token):
 
     return make_response({'msg':msg,'status':code})
 
+
+if __name__ == "__main__":
+    app.run(debug=True)
