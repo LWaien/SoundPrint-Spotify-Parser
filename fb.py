@@ -57,7 +57,7 @@ def searchDb(search_key,search_value):
     else:
         return None
 
-def addSpotifyData(spotify_user,topartists,libdata):
+def addSpotifyData(spotify_user,topartists,libdata,topsongs):
     #search for user in db
     print(f"Adding user data for {spotify_user}")
     keys = searchDb('spotify_user',spotify_user)
@@ -69,7 +69,7 @@ def addSpotifyData(spotify_user,topartists,libdata):
     user_key = keys[0]
     #referencing the user we want to add data for
     user = users.child(user_key)
-    user.update({'libdata':libdata,'top_artists':topartists})
+    user.update({'libdata':libdata,'top_artists':topartists,'top_songs':topsongs})
     #print(user.get())
     return 'Library data added',201
 
@@ -82,3 +82,21 @@ def checkData(spotify_user):
         return False
     else:
         return True
+
+def get_topartists(keys):
+    user_key = keys[0]
+    user = users.child(user_key)    
+    artist_data = user.get('email')
+    #artist data is first returned as a tuple so we're just going to reference it with index 0 and then reference 'top_artists' from the dictionary within it
+    artist_data = artist_data[0]['top_artists']['items']
+    return artist_data
+
+def getpreviousEmail(keys):
+    user_key = keys[0]
+    user = users.child(user_key)
+    try:
+        prev_email = user.get('previous_list')
+        prev_email = prev_email[0]['previous_list']
+        return prev_email
+    except:
+        return None

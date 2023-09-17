@@ -12,6 +12,25 @@ CLIENT_SECRET = "3f882c04f6824a68b45b251ff922488a"
 app = Flask(__name__)
 
 
+@app.route("/topartists/<spotify_user>",methods=['GET'])
+def topartists(spotify_user):
+    #retrieving user key that we want to query
+    keys = fb.searchDb('spotify_user',spotify_user)
+    #passing key to retrieve top artists for the user 
+    top_artists = fb.get_topartists(keys)
+    #return user's top_artists
+    return top_artists
+
+@app.route("/previousEmail/<spotify_user>",methods=['GET'])
+def previousEmail(spotify_user):
+    #retrieving user key that we want to query
+    keys = fb.searchDb('spotify_user',spotify_user)
+    #passing key to retrieve top artists for the user 
+    previous_email = fb.getpreviousEmail(keys)
+    #return user's top_artists
+    return previous_email
+
+
 @app.route("/addEmailInfo",methods=['GET'])
 def addEmailInfo():
     #collect data from request
@@ -50,9 +69,10 @@ def generateData(spotify_user, access_token):
 
     libdata = collectdata.gatherLibData(access_token)
     topartists = collectdata.gatherTopArtists(access_token)
+    topsongs = collectdata.gatherTopSongs(access_token)
 
         #add spotify username to this function
-    msg,code = fb.addSpotifyData(spotify_user,topartists,libdata)
+    msg,code = fb.addSpotifyData(spotify_user,topartists,libdata,topsongs)
 
     return make_response({'msg':msg,'status':code})
 

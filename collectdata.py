@@ -19,7 +19,9 @@ def gatherLibData(access_token):
         
         # Iterate over each track and display the track name and artists
         for item in tracks_data['items']:
+            
             track = item['track']
+            #print(track)
             artist_name = [artist['name'] for artist in track['artists']]
             artist_id = [artist['id'] for artist in track['artists']]
 
@@ -36,12 +38,19 @@ def gatherLibData(access_token):
         if len(tracks_data['items']) < limit:
             break
     
-    print(libdata)
+    #print(libdata)
     return libdata
 
 def gatherTopArtists(access_token):
     print("Retrieving user's top artists...")
-    topartists_response = requests.get('https://api.spotify.com/v1/me/top/artists', headers={'Authorization': 'Bearer ' + access_token})
+    topartists_response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=short_term', headers={'Authorization': 'Bearer ' + access_token})
     topartists_data = topartists_response.json()
-    print(topartists_data)
+    #print(topartists_data)
     return topartists_data
+
+def gatherTopSongs(access_token):
+    print("Retrieving user's top artists...")
+    topsongs_response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=short_term', headers={'Authorization': 'Bearer ' + access_token})
+    topsongs_data = topsongs_response.json()
+    #print(topartists_data)
+    return topsongs_data
