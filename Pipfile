@@ -14,6 +14,7 @@ google-cloud-firestore = "*"
 google-cloud-storage = "*"
 flask = "*"
 gunicorn = "*"
+requests = "*"
 
 [dev-packages]
 
