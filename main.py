@@ -19,38 +19,33 @@ print('spotify loader is running...')
 
 @app.route("/generateData/<spotify_user>/<access_token>",methods=['GET'])
 def generateData(spotify_user, access_token):
-    #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
+    print("loading spotify data")
+    result = queue.enqueue(scanSpotify, spotify_user, access_token)
+    return make_response({'msg':'adding data','status':200})
+
+def scanSpotify(spotify_user,access_token):
+        #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
     print("Generating data")
     try:
-        #libdata = collectdata.gatherLibData(access_token)
-        print("loading user libdata")
-        libdata = queue.enqueue(collectdata.gatherLibData, access_token)
+        libdata = collectdata.gatherLibData(access_token)
     except:
         print("Unable to load libdata")
         libdata = None
 
     try:
-        #topartists = collectdata.gatherTopArtists(access_token)
-        print("loading user topartists")
-        topartists = queue.enqueue(collectdata.gatherTopArtists, access_token)
+        topartists = collectdata.gatherTopArtists(access_token)
     except:
         print("Unable to load topartists")
         topartists = None
 
     try:
-        #topsongs = collectdata.gatherTopSongs(access_token)
-        print("loading user top songs")
-        topsongs = queue.enqueue(collectdata.gatherTopSongs, access_token)
+        topsongs = collectdata.gatherTopSongs(access_token)
     except:
         print("Unable to load topsongs")
         topsongs = None
 
         #add spotify username to this function
     msg,code = fb.addSpotifyData(spotify_user,topartists.result,libdata.result,topsongs.result)
-    print("Adding spotify data")
-    #add = queue.enqueue(fb.addSpotifyData, spotify_user,topartists.result,libdata.result,topsongs.result)
-    print("Spotify data added")
-    return make_response({'msg':'adding data','status':200})
 
 
 if __name__ == "__main__":
