@@ -36,9 +36,7 @@ def gatherLibData(access_token):
         offset += limit
 
         # If there are no more items, exit the loop
-        time.sleep(0.5)
         if len(tracks_data['items']) < limit:
-            print("breaking loop")
             break
     
     #print(libdata)
