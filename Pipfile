@@ -15,10 +15,9 @@ google-cloud-storage = "*"
 flask = "*"
 gunicorn = "*"
 requests = "*"
-time = "*"
 rq = "*"
 redis = "*"
-os = "*"
+
 
 [dev-packages]
 
