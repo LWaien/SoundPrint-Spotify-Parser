@@ -1,4 +1,5 @@
 import requests
+import time
 
 def gatherLibData(access_token):
     print("Retrieving user's library... ")
@@ -39,6 +40,7 @@ def gatherLibData(access_token):
         # If there are no more items, exit the loop
         print(len(tracks_data['items']))
         print(limit)
+        time.sleep(0.5)
         if len(tracks_data['items']) < limit:
             print("breaking loop")
             break
