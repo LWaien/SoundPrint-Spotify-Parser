@@ -16,8 +16,6 @@ def gatherLibData(access_token):
         }
         tracks = requests.get('https://api.spotify.com/v1/me/tracks', headers={'Authorization': 'Bearer ' + access_token}, params=params)
         tracks_data = tracks.json()
-        print("Spotify status code:")
-        print(tracks.status_code)
 
         
         # Iterate over each track and display the track name and artists
@@ -38,8 +36,6 @@ def gatherLibData(access_token):
         offset += limit
 
         # If there are no more items, exit the loop
-        print(len(tracks_data['items']))
-        print(limit)
         time.sleep(0.5)
         if len(tracks_data['items']) < limit:
             print("breaking loop")
