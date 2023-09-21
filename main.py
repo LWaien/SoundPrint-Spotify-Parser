@@ -17,18 +17,21 @@ def generateData(spotify_user, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
     print("Generating data")
     try:
+        print("loading libdata")
         libdata = collectdata.gatherLibData(access_token)
     except:
         print("Unable to load libdata")
         libdata = None
 
     try:
+        print("loading topartists")
         topartists = collectdata.gatherTopArtists(access_token)
     except:
         print("Unable to load topartists")
         topartists = None
 
     try:
+        print("loading topsongs")
         topsongs = collectdata.gatherTopSongs(access_token)
     except:
         print("Unable to load topsongs")
