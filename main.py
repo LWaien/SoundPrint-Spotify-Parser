@@ -46,9 +46,9 @@ def generateData(spotify_user, access_token):
         topsongs = None
 
         #add spotify username to this function
-    #msg,code = fb.addSpotifyData(spotify_user,topartists.result,libdata.result,topsongs.result)
+    msg,code = fb.addSpotifyData(spotify_user,topartists.result,libdata.result,topsongs.result)
     print("Adding spotify data")
-    add = queue.enqueue(fb.addSpotifyData, spotify_user,topartists.result,libdata.result,topsongs.result)
+    #add = queue.enqueue(fb.addSpotifyData, spotify_user,topartists.result,libdata.result,topsongs.result)
     print("Spotify data added")
     return make_response({'msg':'adding data','status':200})
 
