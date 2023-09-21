@@ -15,10 +15,23 @@ print('spotify loader is running...')
 def generateData(spotify_user, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
     print("Generating data")
+    try:
+        libdata = collectdata.gatherLibData(access_token)
+    except:
+        print("Unable to load libdata")
+        libdata = None
+        
+    try:
+        topartists = collectdata.gatherTopArtists(access_token)
+    except:
+        print("Unable to load topartists")
+        topartists = None
 
-    libdata = collectdata.gatherLibData(access_token)
-    topartists = collectdata.gatherTopArtists(access_token)
-    topsongs = collectdata.gatherTopSongs(access_token)
+    try:
+        topsongs = collectdata.gatherTopSongs(access_token)
+    except:
+        print("Unable to load topsongs")
+        topsongs = None
 
         #add spotify username to this function
     msg,code = fb.addSpotifyData(spotify_user,topartists,libdata,topsongs)
