@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for, request,jsonify, make_response
 import collectdata
 import fb
-
+import threading
 
 
 CLIENT_ID = "32f3ca3f815c4b7f91335ffeb5d90f7d"
@@ -16,6 +16,14 @@ print('spotify loader is running...')
 def generateData(spotify_user, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
     print("Generating data")
+    
+    thread = threading.Thread(target=scanSpotify, args=(spotify_user, access_token))
+    thread.start()
+
+    return make_response({'msg':'scanning spotify','status':200})
+
+
+def scanSpotify(spotify_user,access_token):
     try:
         print("loading libdata")
         libdata = collectdata.gatherLibData(access_token)
@@ -39,9 +47,7 @@ def generateData(spotify_user, access_token):
 
         #add spotify username to this function
     msg,code = fb.addSpotifyData(spotify_user,topartists,libdata,topsongs)
-
-    return make_response({'msg':msg,'status':code})
-
+    print(code)
 
 if __name__ == "__main__":
     app.run(debug=True)
