@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, request,jsonify, make_response
 import collectdata
 import fb
+from rq import Queue
+from redis import Redis
 
 
 CLIENT_ID = "32f3ca3f815c4b7f91335ffeb5d90f7d"
@@ -20,7 +22,7 @@ def generateData(spotify_user, access_token):
     except:
         print("Unable to load libdata")
         libdata = None
-        
+
     try:
         topartists = collectdata.gatherTopArtists(access_token)
     except:

@@ -16,6 +16,8 @@ flask = "*"
 gunicorn = "*"
 requests = "*"
 time = "*"
+rq = "*"
+redis = "*"
 
 [dev-packages]
 
