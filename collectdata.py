@@ -15,6 +15,8 @@ def gatherLibData(access_token):
         }
         tracks = requests.get('https://api.spotify.com/v1/me/tracks', headers={'Authorization': 'Bearer ' + access_token}, params=params)
         tracks_data = tracks.json()
+        print("Spotify status code:")
+        print(tracks.status_code)
 
         
         # Iterate over each track and display the track name and artists
