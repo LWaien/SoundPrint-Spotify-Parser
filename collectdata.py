@@ -37,7 +37,10 @@ def gatherLibData(access_token):
         offset += limit
 
         # If there are no more items, exit the loop
+        print(len(tracks_data['items']))
+        print(limit)
         if len(tracks_data['items']) < limit:
+            print("breaking loop")
             break
     
     #print(libdata)
