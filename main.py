@@ -23,6 +23,7 @@ def generateData(spotify_user, access_token):
     print("Generating data")
     try:
         #libdata = collectdata.gatherLibData(access_token)
+        print("loading user libdata")
         libdata = queue.enqueue(collectdata.gatherLibData, access_token)
     except:
         print("Unable to load libdata")
@@ -30,6 +31,7 @@ def generateData(spotify_user, access_token):
 
     try:
         #topartists = collectdata.gatherTopArtists(access_token)
+        print("loading user topartists")
         topartists = queue.enqueue(collectdata.gatherTopArtists, access_token)
     except:
         print("Unable to load topartists")
@@ -37,6 +39,7 @@ def generateData(spotify_user, access_token):
 
     try:
         #topsongs = collectdata.gatherTopSongs(access_token)
+        print("loading user top songs")
         topsongs = queue.enqueue(collectdata.gatherTopSongs, access_token)
     except:
         print("Unable to load topsongs")
@@ -44,8 +47,9 @@ def generateData(spotify_user, access_token):
 
         #add spotify username to this function
     #msg,code = fb.addSpotifyData(spotify_user,topartists.result,libdata.result,topsongs.result)
+    print("Adding spotify data")
     add = queue.enqueue(fb.addSpotifyData, spotify_user,topartists.result,libdata.result,topsongs.result)
-
+    print("Spotify data added")
     return make_response({'msg':'adding data','status':200})
 
 
