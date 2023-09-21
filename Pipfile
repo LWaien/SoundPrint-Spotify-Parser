@@ -18,6 +18,7 @@ requests = "*"
 time = "*"
 rq = "*"
 redis = "*"
+os = "*"
 
 [dev-packages]
 
