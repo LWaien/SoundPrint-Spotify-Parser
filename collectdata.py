@@ -1,6 +1,6 @@
 import requests
 import time
-from main import loadingFlag, progress, lock
+import main
 
 def gatherLibData(access_token):
     print("Retrieving user's library... ")
@@ -37,10 +37,9 @@ def gatherLibData(access_token):
             libdata.append(info)
 
             loadedtracks += 1
-            with lock:
-                global progress
-                progress = (loadedtracks / total_tracks) * 100
 
+            progress = (loadedtracks / total_tracks) * 100
+            main.updateProgress(progress)
 
         # Increment the offset by the limit to get the next page
         offset += limit
@@ -50,9 +49,6 @@ def gatherLibData(access_token):
             break
     
     #print(libdata)
-    with lock:
-        global loadingFlag
-        loadingFlag = False
     return libdata
 
 def gatherTopArtists(access_token):

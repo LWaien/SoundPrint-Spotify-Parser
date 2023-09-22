@@ -62,5 +62,9 @@ def getProgress():
     global progress
     return progress
 
+def updateProgress(update_val):
+    global progress
+    progress = update_val
+
 if __name__ == "__main__":
     app.run(debug=True)
