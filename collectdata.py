@@ -1,10 +1,13 @@
 import requests
 import time
+from main import loadingFlag, progress, lock
 
 def gatherLibData(access_token):
     print("Retrieving user's library... ")
     limit = 50
     offset = 0
+    loadedtracks = 0
+    total_tracks = None
 
     libdata = []
     while True:
@@ -17,6 +20,9 @@ def gatherLibData(access_token):
         tracks = requests.get('https://api.spotify.com/v1/me/tracks', headers={'Authorization': 'Bearer ' + access_token}, params=params)
         tracks_data = tracks.json()
 
+        #find total len of tracks in lib to track loading progress
+        if total_tracks is None:
+            total_tracks = tracks_data['total']
         
         # Iterate over each track and display the track name and artists
         for item in tracks_data['items']:
@@ -30,7 +36,11 @@ def gatherLibData(access_token):
             info = {'artist_name':artist_name[0],'artist_id':artist_id[0]}
             libdata.append(info)
 
-        
+            loadedtracks += 1
+            with lock:
+                global progress
+                progress = (loadedtracks / total_tracks) * 100
+
 
         # Increment the offset by the limit to get the next page
         offset += limit
@@ -40,6 +50,9 @@ def gatherLibData(access_token):
             break
     
     #print(libdata)
+    with lock:
+        global loadingFlag
+        loadingFlag = False
     return libdata
 
 def gatherTopArtists(access_token):

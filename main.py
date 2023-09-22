@@ -12,6 +12,11 @@ app = Flask(__name__)
 
 print('spotify loader is running...')
 
+#global variables to track loading process
+loadingFlag = False
+progress = 0
+lock = threading.Lock()
+
 @app.route("/generateData/<spotify_user>/<access_token>",methods=['GET'])
 def generateData(spotify_user, access_token):
     #route that accepts spotify user's access token. Endpoint then collects data to be saved for recommendations in the future
@@ -24,6 +29,8 @@ def generateData(spotify_user, access_token):
 
 
 def scanSpotify(spotify_user,access_token):
+    loading = True
+
     try:
         print("loading libdata")
         libdata = collectdata.gatherLibData(access_token)
@@ -47,7 +54,13 @@ def scanSpotify(spotify_user,access_token):
 
         #add spotify username to this function
     msg,code = fb.addSpotifyData(spotify_user,topartists,libdata,topsongs)
-    print(code)
+    #print(code)+
+    loading = False
+
+@app.route("/getProgress",methods=['GET'])
+def getProgress():
+    global progress
+    return progress
 
 if __name__ == "__main__":
     app.run(debug=True)
