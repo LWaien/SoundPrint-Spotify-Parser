@@ -60,7 +60,7 @@ def scanSpotify(spotify_user,access_token):
 @app.route("/getProgress",methods=['GET'])
 def getProgress():
     global progress
-    return progress
+    return jsonify({'progress': progress})
 
 def updateProgress(update_val):
     global progress
