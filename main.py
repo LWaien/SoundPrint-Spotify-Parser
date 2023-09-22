@@ -62,21 +62,16 @@ def scanSpotify(spotify_user,access_token):
 
 @app.route("/getProgress",methods=['GET'])
 def getProgress():
-    lock1.acquire()
     global progress
     prog = progress
-    lock2.release()
-    lock1.release()
     return jsonify({'progress': prog})
     
         
         
 def updateProgress(update_val):
-    lock2.acquire()
     global progress
     progress = update_val
-    lock1.release()
-    lock2.release()
+
 
     
 
