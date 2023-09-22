@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, request,jsonify, make_response
 import collectdata
 import fb
 import threading
+from flask_cors import CORS
 
 
 CLIENT_ID = "32f3ca3f815c4b7f91335ffeb5d90f7d"
