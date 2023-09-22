@@ -65,6 +65,8 @@ def getProgress():
 
 def updateProgress(update_val):
     global progress
+    print("Loading progress:")
+    print(progress)
     progress = update_val
 
 if __name__ == "__main__":
