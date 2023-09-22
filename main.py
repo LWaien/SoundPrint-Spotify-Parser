@@ -10,6 +10,7 @@ CLIENT_SECRET = "3f882c04f6824a68b45b251ff922488a"
 
 
 app = Flask(__name__)
+CORS(app)  
 
 print('spotify loader is running...')
 
