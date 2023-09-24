@@ -18,7 +18,6 @@ print('spotify loader is running...')
 loadingFlag = False
 progress = 0
 lock1 = threading.Lock()
-lock2 = threading.Lock()
 
 @app.route("/generateData/<spotify_user>/<access_token>",methods=['GET'])
 def generateData(spotify_user, access_token):
@@ -63,14 +62,16 @@ def scanSpotify(spotify_user,access_token):
 @app.route("/getProgress",methods=['GET'])
 def getProgress():
     global progress
-    prog = progress
+    with lock1:
+        prog = progress
     return jsonify({'progress': prog})
     
         
         
 def updateProgress(update_val):
     global progress
-    progress = update_val
+    with lock1:
+        progress = update_val
 
 
     
