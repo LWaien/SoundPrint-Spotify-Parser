@@ -36,6 +36,7 @@ def scanSpotify(spotify_user,access_token):
     try:
         print("loading libdata")
         libdata = collectdata.gatherLibData(access_token)
+        
     except:
         print("Unable to load libdata")
         libdata = None
@@ -50,6 +51,7 @@ def scanSpotify(spotify_user,access_token):
     try:
         print("loading topsongs")
         topsongs = collectdata.gatherTopSongs(access_token)
+        updateProgress(100)
     except:
         print("Unable to load topsongs")
         topsongs = None
