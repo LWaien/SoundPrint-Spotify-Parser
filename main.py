@@ -3,6 +3,7 @@ import collectdata
 import fb
 import threading
 from flask_cors import CORS
+import time
 
 
 CLIENT_ID = "32f3ca3f815c4b7f91335ffeb5d90f7d"
@@ -51,13 +52,14 @@ def scanSpotify(spotify_user,access_token):
     try:
         print("loading topsongs")
         topsongs = collectdata.gatherTopSongs(access_token)
-        updateProgress(100)
+        
     except:
         print("Unable to load topsongs")
         topsongs = None
-
+    updateProgress(100)
         #add spotify username to this function
     msg,code = fb.addSpotifyData(spotify_user,topartists,libdata,topsongs)
+    time.sleep(1)
     updateProgress(0)
     #print(code)+
     loading = False
