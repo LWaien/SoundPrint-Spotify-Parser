@@ -39,6 +39,7 @@ def gatherLibData(access_token):
             loadedtracks += 1
 
             progress = (loadedtracks / total_tracks) * 100
+            print(progress)
             main.updateProgress(progress)
 
         # Increment the offset by the limit to get the next page
