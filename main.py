@@ -56,6 +56,7 @@ def scanSpotify(spotify_user,access_token):
 
         #add spotify username to this function
     msg,code = fb.addSpotifyData(spotify_user,topartists,libdata,topsongs)
+    updateProgress(0)
     #print(code)+
     loading = False
 
