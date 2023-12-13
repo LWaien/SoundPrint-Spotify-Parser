@@ -10,8 +10,7 @@ def getArtistConcerts(artistId):
     time.sleep(0.5)
     url = "https://spotify-scraper.p.rapidapi.com/v1/artist/concerts"
     parameters = {"artistId": artistId}
-    headers = {"X-RapidAPI-Key": "4cb897967cmshd1ea0ddcb68d80cp175d35jsn3fc529a8f8c2",
-               "X-RapidAPI-Host": "spotify-scraper.p.rapidapi.com"}
+    headers = 
     response = requests.request(
         "GET", url, headers=headers, params=parameters)
 
